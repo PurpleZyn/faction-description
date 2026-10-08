@@ -1,5 +1,10 @@
 # Rogue Assembly Faction Description
 
+## Cinematic redesign in progress
+
+[Open the current redesign preview](https://purplezyn.github.io/faction-description/redesign/). Editable content is in `redesign/content.json`; artwork is in `redesign/assets`. Every main-branch build publishes the review draft automatically. This does not update Torn. See `redesign/README.md` for editing instructions.
+
+
 A config-driven image builder for Rogue Assembly's Torn faction description.
 
 The whole point of this repo is to stop rebuilding one giant image every time a perk, rule, requirement, or Rogue Code item changes. The description is split into stable section URLs, while the editable wording lives in `faction_config.json`.
