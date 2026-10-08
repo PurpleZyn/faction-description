@@ -24,3 +24,9 @@ Cover, leadership, VIP and panel-background assets were made with the built-in i
 ## Before release
 
 This is an assembled review draft. Review copy, character likenesses and spacing at the intended Torn width. The user and faction will approve the design before installing the resulting image URLs in Torn. The existing root preview remains available.
+
+## Revision 2 — member-led cinematic scenes
+
+Fourteen additional current Rogues appear in three original scenes: clubhouse, rooftop and armory. `character-map.json` preserves the user-supplied name order and reference filenames. Scene placement is illustrative and does not imply official responsibilities. Earlier leadership/VIP references remain alternatives; the current five-person leadership panel includes Ivory.
+
+Headings overlap the dark lower part of each scene, member captions are compact, activities and Code use two columns, and peace-mode metrics have prominent figures. All copy stays in `content.json`. The eight section image URLs remain unchanged; the HTML preview uses content hashes to refresh cached images after rebuilds. Original composition versions remain available in Git history.
