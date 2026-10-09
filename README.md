@@ -1,50 +1,55 @@
-# Rogue Assembly Faction Description
+# Rogue Assembly faction description
 
-## Cinematic redesign in progress
+**[View the current design](https://purplezyn.github.io/faction-description/)**
 
-[Open the current redesign preview](https://purplezyn.github.io/faction-description/redesign/). Editable content is in `redesign/content.json`; artwork is in `redesign/assets`. Every main-branch build publishes the review draft automatically. This does not update Torn. See `redesign/README.md` for editing instructions.
+This repository is the working version of our modular Torn faction description. The main page always shows the latest build. It does not change the faction description inside Torn until you add the images there.
 
+## Where to find things
 
-A config-driven image builder for Rogue Assembly's Torn faction description.
+| What you want to change | Where to go |
+| --- | --- |
+| Wording, rules, perks, five leaders and their roles | [content.json](content.json) |
+| Current scene and cover images | [artwork/](artwork/) |
+| Layout, fonts, image generation | [scripts/build.py](scripts/build.py) |
+| Automatic build and publishing | [.github/workflows/build.yml](.github/workflows/build.yml) |
 
-The whole point of this repo is to stop rebuilding one giant image every time a perk, rule, requirement, or Rogue Code item changes. The description is split into stable section URLs, while the editable wording lives in `faction_config.json`.
+## Make an update
 
-## Generated sections
+1. Edit **content.json** or replace the relevant file in **artwork/**.
+2. Commit the change to **main**.
+3. Wait for **Build faction description** in the Actions tab to finish. The preview updates automatically.
 
-The builder creates:
+Only the five main leaders have names and roles on the page. Other characters are artwork without member captions or implied roles. The leadership art includes two supporting figures behind the five main leaders; there is no separate VIP section.
 
-- `docs/recruiting.png` — recruiting banner
-- `docs/hero.png` — faction hero artwork
-- `docs/about.png` — editable About Our Faction panel
-- `docs/rogue-code.png` — editable Rogue Code panel
-- `docs/footer.gif` — real animated GIF footer
-- `docs/full-preview.png` — static full-page preview
-- `docs/torn-embed-snippet.html` — ready-to-copy image tags
+## Artwork files
 
-## Updating faction information
+- `cover.jpg` — rose emblem and faction wordmark
+- `clubhouse.jpg` — community scene
+- `leadership.jpg` — five leaders with two supporting figures behind them
+- `rooftop.jpg` — faction activities scene
+- `armory.jpg` — equipment and support scene
+- `panel-background.jpg` — decorative background for the Code
 
-Edit `faction_config.json` and commit the change. The GitHub Action rebuilds the images without changing their public URLs.
+The images are separate from the editable wording. Changing text does not require remaking artwork.
 
-The text panels automatically grow taller when wording wraps onto extra lines, so routine wording changes should not require manually redesigning the image.
+## Build locally
 
-## GitHub Pages URLs
+Install Python, Pillow (`pip install -r requirements.txt`) and DejaVu fonts (`fonts-dejavu-core` on Ubuntu), then run:
 
-Once GitHub Pages is enabled for this repository using **GitHub Actions** as the source:
+```sh
+python scripts/build.py
+```
 
-- https://purplezyn.github.io/faction-description/recruiting.png
-- https://purplezyn.github.io/faction-description/hero.png
-- https://purplezyn.github.io/faction-description/about.png
-- https://purplezyn.github.io/faction-description/rogue-code.png
-- https://purplezyn.github.io/faction-description/footer.gif
+Open **build/index.html** to review. That folder is generated and ignored by Git, so it does not clutter this repository. GitHub Actions publishes it directly without creating extra image-update commits.
 
-Preview:
+## Review and eventual Torn installation
 
-- https://purplezyn.github.io/faction-description/
+- [Current preview](https://purplezyn.github.io/faction-description/)
+- [Full-page image](https://purplezyn.github.io/faction-description/full-preview.png)
+- [Image embed markup](https://purplezyn.github.io/faction-description/torn-embed-snippet.html)
 
-## Why GIFs work here
+The old `/redesign/` preview URL redirects to the current main page. Test the embed markup in Torn's editor when you are ready; the preview alone does not validate Torn's editor behavior.
 
-Purple's personal signature is rendered into one final PNG, so animated source GIFs get flattened to a single frame. This faction project keeps the animated footer as its own final `footer.gif`, so Torn can display the animation directly without sending it through the PNG compositor.
+## Older versions
 
-## Current art source
-
-The first working build reuses Rogue Assembly artwork already stored in the existing PurpleZyn GitHub assets. The art layer is intentionally separate from the generated text panels, so it can be swapped later without touching the faction wording or layout code.
+Previous drafts, old artwork, and old configurations are recoverable through **Git history**. They have been removed from the current folder tree so there is only one active version. No history was erased.

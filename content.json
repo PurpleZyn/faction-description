@@ -39,20 +39,6 @@
       "War strategy, coordination & diplomacy"
     ]
   ],
-  "vips": [
-    [
-      "John",
-      "Events & community"
-    ],
-    [
-      "Van",
-      "Events & community"
-    ],
-    [
-      "DungBeetle",
-      "Organised crime support"
-    ]
-  ],
   "activities": {
     "eyebrow": "FIGHT TOGETHER. RISE TOGETHER.",
     "title": "When Rogues Assemble",
@@ -121,13 +107,11 @@
     "title": "Your story starts here",
     "paragraphs": [
       "Sound like your kind of crew? Come introduce yourself. We’ll take it from there.",
-      "Questions about the expectations? Talk to Ivory or Sativa before applying. One of them will contact you after your application."
+      "Questions about the expectations? Talk to our recruitment team before applying. They’ll contact you after your application."
     ]
   },
   "links": {
-    "apply": "https://www.torn.com/factions.php?step=profile&ID=54651",
-    "Ivory": "https://www.torn.com/profiles.php?XID=3734945",
-    "Sativa": "https://www.torn.com/profiles.php?XID=3832806"
+    "apply": "https://www.torn.com/factions.php?step=profile&ID=54651"
   },
   "inclusion_heading": "A PLACE TO BELONG",
   "leadership_intro": "The members are Rogue Assembly. Leadership helps the crew succeed.",
@@ -152,26 +136,5 @@
       "Defense & dexterity gym gains"
     ]
   ],
-  "scene_cast": {
-    "clubhouse": [
-      "Star",
-      "Zaharria",
-      "Kaliska",
-      "Unriaan",
-      "WynterWolf"
-    ],
-    "rooftop": [
-      "Mufasasreign",
-      "Morzan",
-      "Zykhan",
-      "Zeiii",
-      "Hellblazer"
-    ],
-    "armory": [
-      "Malachinet",
-      "Andrius",
-      "ThatWatsonGuy",
-      "Simy"
-    ]
-  }
+  "leadership_title": "The Assembly’s Leadership"
 }

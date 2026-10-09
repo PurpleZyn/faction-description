@@ -4,11 +4,9 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths-ignore:
-      - "docs/**"
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -19,48 +17,25 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
-
       - name: Install requirements
         run: pip install -r requirements.txt
-
-      - name: Build faction description images
-        run: python build_faction.py
-
-      - name: Install preview fonts
+      - name: Install fonts
         run: sudo apt-get update && sudo apt-get install -y fonts-dejavu-core
-
-      - name: Build cinematic review preview
-        run: python redesign/build_preview.py --output docs/redesign
-
-      - name: Save generated images
-        run: |
-          git config user.name "faction-description-bot"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs
-          if git diff --cached --quiet; then
-            echo "No generated changes to commit."
-          else
-            git commit -m "Rebuild faction description"
-            git push
-          fi
-
+      - name: Build current faction description
+        run: python scripts/build.py
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs
-
+          path: build
       - name: Deploy GitHub Pages
         uses: actions/deploy-pages@v4
