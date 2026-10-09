@@ -28,7 +28,8 @@ Only the five main leaders have names and roles on the page. Other characters ar
 - `leadership.jpg` — five leaders with two supporting figures behind them
 - `rooftop.jpg` — faction activities scene
 - `armory.jpg` — equipment and support scene
-- `panel-background.jpg` — decorative background for the Code
+- `panel-background.jpg` — repeating background shared by every section
+- `thorn-overlay.png` — transparent vine rails and subtle corners shared by every scene
 
 The images are separate from the editable wording. Changing text does not require remaking artwork.
 
@@ -53,3 +54,7 @@ The old `/redesign/` preview URL redirects to the current main page. Test the em
 ## Older versions
 
 Previous drafts, old artwork, and old configurations are recoverable through **Git history**. They have been removed from the current folder tree so there is only one active version. No history was erased.
+
+## Shared rose-and-thorn theme
+
+Every section uses the same background at a fixed scale. It repeats down the page with mirrored joins, and the pattern continues across section boundaries. Text can grow without stretching the flowers. The transparent overlay frames the cover and every scene with subtle corner vines, while edge decoration stays outside the text column. Source portraits stay separate from the theme, so a future image replacement receives the same framing automatically.

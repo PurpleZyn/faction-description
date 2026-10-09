@@ -4,7 +4,7 @@ import hashlib
 import html
 import json
 from pathlib import Path
-from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFont, ImageOps
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'build'
@@ -32,6 +32,31 @@ def lines(text, f, width):
         result.append(line)
     return result
 
+def repeated_art(filename, height, offset=0):
+    """Tile at one fixed scale, mirror alternate repeats to avoid hard seams."""
+    tile=Image.open(ROOT/'artwork'/filename).convert('RGBA')
+    tile=tile.resize((W,round(tile.height*W/tile.width)),Image.Resampling.LANCZOS)
+    out=Image.new('RGBA',(W,height))
+    y=0
+    while y<height:
+        index,inside=divmod(offset+y,tile.height)
+        source=ImageOps.flip(tile) if index%2 else tile
+        count=min(height-y,tile.height-inside)
+        out.paste(source.crop((0,inside,W,inside+count)),(0,y))
+        y+=count
+    return out
+
+def artwork_corners(art):
+    """Frame each scene with the same four restrained, transparent ornaments."""
+    overlay=Image.open(ROOT/'artwork'/'thorn-overlay.png').convert('RGBA')
+    sw,sh=overlay.size
+    for right,bottom in [(False,False),(True,False),(False,True),(True,True)]:
+        box=(sw-310 if right else 0,sh-270 if bottom else 0,sw if right else 310,sh if bottom else 270)
+        corner=overlay.crop(box).resize((150,131),Image.Resampling.LANCZOS)
+        corner.putalpha(corner.getchannel('A').point(lambda v:round(v*.65)))
+        art.alpha_composite(corner,(art.width-150 if right else 0,art.height-131 if bottom else 0))
+    return art
+
 class Panel:
     def __init__(self,ornate=False):
         self.im=Image.new('RGB',(W,6000),BG);self.d=ImageDraw.Draw(self.im);self.y=0;self.ornate=ornate
@@ -56,7 +81,8 @@ class Panel:
         for row in range(h):
             v=max(0,(row/h-.65)/.35)
             if v:md.line((0,row,W,row),fill=(8,7,13,round(min(1,v)*255)))
-        art=Image.alpha_composite(art.convert('RGBA'),mask).convert('RGB')
+        art=Image.alpha_composite(art.convert('RGBA'),mask)
+        art=artwork_corners(art).convert('RGB')
         self.im.paste(art,(0,self.y));top=self.y;self.y+=h
         if title:
             self.y=top+h-125
@@ -87,14 +113,23 @@ class Panel:
                 y=self.text(label,24,PURPLE,x=x+14,y=y,width=width-28,center=True,gap=20)
                 bottom=max(bottom,y,self.y+170)
             self.y=bottom
-    def render(self):
+    def render(self,offset=0):
         assert self.y+40<6000,'Panel exceeds canvas'
         im=self.im.crop((0,0,W,self.y+40))
+        # Shared textured background: one scale and continuous phase across panels.
+        backdrop=ImageEnhance.Brightness(repeated_art('panel-background.jpg',im.height,offset).convert('RGB')).enhance(.65)
+        ink=ImageChops.difference(im,Image.new('RGB',im.size,BG)).convert('L').point(lambda v:255 if v else 0)
+        backdrop.paste(im,(0,0),ink)
+        im=backdrop.convert('RGBA')
+        # Repeat the transparent vines over scene edges, never over the text column.
+        rails=repeated_art('thorn-overlay.png',im.height,offset)
+        edge=Image.new('L',(W,1));ep=edge.load()
+        for x in range(W):
+            distance=min(x,W-1-x)
+            ep[x,0]=round(160*max(0,1-distance/64))
+        rails.putalpha(ImageChops.multiply(rails.getchannel('A'),edge.resize((W,im.height))))
+        im=Image.alpha_composite(im,rails).convert('RGB')
         if self.ornate:
-            backdrop=Image.open(ROOT/'artwork'/'panel-background.jpg').convert('RGB').resize(im.size,Image.Resampling.LANCZOS)
-            backdrop=ImageEnhance.Brightness(backdrop).enhance(0.55)
-            ink=ImageChops.difference(im,Image.new('RGB',im.size,BG)).convert('L').point(lambda v:255 if v else 0)
-            backdrop.paste(im,(0,0),ink);im=backdrop
             # Slender metallic rules frame the Code without repeating a full border.
             d=ImageDraw.Draw(im)
             for x in [28,36,964,972]:d.line((x,30,x,im.height-25),fill='#60466c',width=1)
@@ -107,7 +142,7 @@ def main():
     OUT.mkdir(parents=True,exist_ok=True)
     c=json.loads((ROOT/'content.json').read_text());panels=[]
     def save(name,p,alt):
-        im=p.render();im.save(OUT/(name+'.png'));panels.append((name,im,alt))
+        im=p.render(offset=sum(image.height for _,image,_ in panels));im.save(OUT/(name+'.png'));panels.append((name,im,alt))
     p=Panel();p.scene('cover.jpg');p.label(c['tagline'].upper());p.rule()
     s=c['origin'];p.label(s['eyebrow']);p.heading(s['title'])
     for t in s['paragraphs']:p.text(t,29,center=True)
