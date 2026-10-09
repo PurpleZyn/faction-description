@@ -172,9 +172,8 @@ def main():
     for name,im,alt in panels:
         digest=hashlib.sha256((OUT/(name+'.png')).read_bytes()).hexdigest()[:10]
         img=f'<img src="{name}.png?v={digest}" width="{W}" height="{im.height}" alt="{esc(alt,quote=True)}">'
-        body+=f'<a href="{esc(c["links"]["apply"],quote=True)}">{img}</a>' if name=='07-join' else img
-    body+='<nav>'+ ' · '.join(f'<a href="{esc(url,quote=True)}">{esc(label)}</a>' for label,url in c['links'].items())+'</nav>'
-    (OUT/'index.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rogue Assembly — current design</title><style>body{margin:0;background:#08070d;color:#eee7f2;font:18px sans-serif}main{max-width:1000px;margin:auto}img{display:block;width:100%;height:auto}a{color:#bb8ddd}nav{text-align:center;padding:30px}</style><main>'+body+'</main></html>')
+        body+=img
+    (OUT/'index.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rogue Assembly — current design</title><style>body{margin:0;background:#08070d;color:#eee7f2;font:18px sans-serif}main{max-width:1000px;margin:auto}img{display:block;width:100%;height:auto}</style><main>'+body+'</main></html>')
     redirect_dir=OUT/'redesign';redirect_dir.mkdir(exist_ok=True)
     (redirect_dir/'index.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=../"><title>Rogue Assembly has moved</title><a href="../">View the current Rogue Assembly design</a></html>')
     (OUT/'.nojekyll').touch()
@@ -182,7 +181,6 @@ def main():
     embeds=[]
     for name,_,alt in panels:
         tag=f'<img src="{base}{name}.png" alt="{esc(alt,quote=True)}" style="display:block;max-width:100%;height:auto;margin:0;">'
-        if name=='07-join':tag=f'<a href="{esc(c["links"]["apply"],quote=True)}">{tag}</a>'
         embeds.append(tag)
     (OUT/'torn-embed-snippet.html').write_text('\n'.join(embeds))
     print('Built',len(panels),'panels;',full.size,'full preview')
